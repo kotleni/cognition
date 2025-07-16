@@ -13,7 +13,7 @@ export function MarkdownEditor(props: MarkdownEditorProps) {
         <textarea
             className="w-full h-full"
             value={content}
-            onInput={e => {
+            onChange={e => {
                 setContent(e.target.value);
                 props.onChange(content);
             }}

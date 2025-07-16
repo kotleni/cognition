@@ -15,7 +15,7 @@ export function MarkdownEditor(props: MarkdownEditorProps) {
             value={content}
             onChange={e => {
                 setContent(e.target.value);
-                props.onChange(content);
+                props.onChange(e.target.value);
             }}
         />
     );

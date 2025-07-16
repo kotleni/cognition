@@ -1,7 +1,19 @@
+import {parseMarkdown} from '@/markdown/parser';
+
 interface MarkdownRendererProps {
     markdown: string;
 }
 
 export function MarkdownRenderer(props: MarkdownRendererProps) {
-    return <div className="p-4">{props.markdown}</div>;
+    return (
+        <div className="p-4">
+            {parseMarkdown(props.markdown).map(a => {
+                return (
+                    <span>
+                        [{a.name}:{a.value}]
+                    </span>
+                );
+            })}
+        </div>
+    );
 }

@@ -30,6 +30,10 @@ class Title extends Node {
     }
 }
 
+class NewLine extends Node {
+    tagName: string = 'newline';
+}
+
 export function parseMarkdown(markdown: string): MarkdownToken[] {
     const content = markdown.trim() + '\n';
 
@@ -40,6 +44,9 @@ export function parseMarkdown(markdown: string): MarkdownToken[] {
         switch (ch) {
             case '\n':
                 if (node.buffer.length > 0) {
+                    tokens.push({node: node, value: node.buffer});
+                } else {
+                    node = new NewLine();
                     tokens.push({node: node, value: node.buffer});
                 }
                 node = new Paragraph();

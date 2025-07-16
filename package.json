@@ -6,7 +6,8 @@
     "dev": "next dev --turbopack",
     "build": "next build",
     "start": "next start",
-    "format": "eslint --fix '**/*.ts*'"
+    "format": "eslint --fix '**/*.ts*'",
+    "lint": "eslint '**/*.ts*'"
   },
   "dependencies": {
     "@typescript-eslint/parser": "^8.36.0",

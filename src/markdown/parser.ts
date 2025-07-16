@@ -1,35 +1,58 @@
 export type MarkdownToken = {
-    name: string;
+    node: Node;
     value: string;
     // attrs?: {[key: string]: string};
 };
 
-enum Mode {
-    PARAGRAPH = 'paragraph',
-    TITLE = 'title',
+abstract class Node {
+    abstract tagName: string;
+    buffer: string = '';
+
+    toString(): string {
+        return `[${this.tagName}:${this.buffer}]`;
+    }
+}
+
+class Paragraph extends Node {
+    tagName: string = 'paragraph';
+}
+
+class Title extends Node {
+    tagName: string = 'title';
+    size: number = 3
+
+    decrementSize() {
+        if (this.size > 1) this.size -= 1;
+    }
+
+    toString(): string {
+        return `[${this.tagName}:size=${this.size}:${this.buffer}]`;
+    }
 }
 
 export function parseMarkdown(markdown: string): MarkdownToken[] {
     const content = markdown.trim() + '\n';
 
     const tokens: MarkdownToken[] = [];
-    let mode: Mode = Mode.PARAGRAPH;
-    let buffer = '';
+    let node: Node = new Paragraph();
 
     for (const ch of content) {
         switch (ch) {
             case '\n':
-                if (buffer.length > 0) {
-                    tokens.push({name: mode.toString(), value: buffer});
-                    buffer = '';
+                if (node.buffer.length > 0) {
+                    tokens.push({node: node, value: node.buffer});
                 }
-                mode = Mode.PARAGRAPH;
+                node = new Paragraph();
                 break;
             case '#':
-                mode = Mode.TITLE;
+                if (node instanceof Title) {
+                    node.decrementSize();
+                } else {
+                    node = new Title();
+                }
                 break;
             default:
-                buffer += ch;
+                node.buffer += ch;
                 break;
         }
     }

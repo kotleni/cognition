@@ -1,21 +1,17 @@
 'use client';
 
-import {useState} from 'react';
-
 interface MarkdownEditorProps {
+    value: string;
     onChange: (content: string) => void;
 }
 
-export function MarkdownEditor(props: MarkdownEditorProps) {
-    const [content, setContent] = useState('');
-
+export function MarkdownEditor({value, onChange}: MarkdownEditorProps) {
     return (
         <textarea
             className="w-full h-full"
-            value={content}
+            value={value}
             onChange={e => {
-                setContent(e.target.value);
-                props.onChange(e.target.value);
+                onChange(e.target.value);
             }}
         />
     );

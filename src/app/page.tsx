@@ -9,7 +9,7 @@ export default function Home() {
 
     return (
         <div className="flex flex-row h-full">
-            <LeftSide onMDChange={setMarkdown} />
+            <LeftSide markdown={markdown} onMDChange={setMarkdown} />
             <RightSide markdown={markdown} />
         </div>
     );

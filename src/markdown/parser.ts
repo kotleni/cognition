@@ -19,7 +19,7 @@ class Paragraph extends Node {
 
 class Title extends Node {
     tagName: string = 'title';
-    size: number = 3
+    size: number = 3;
 
     decrementSize() {
         if (this.size > 1) this.size -= 1;
@@ -45,6 +45,10 @@ export function parseMarkdown(markdown: string): MarkdownToken[] {
                 node = new Paragraph();
                 break;
             case '#':
+                if (node.buffer.length > 0) {
+                    node.buffer += ch;
+                    break;
+                }
                 if (node instanceof Title) {
                     node.decrementSize();
                 } else {

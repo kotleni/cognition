@@ -13,8 +13,8 @@ export function MarkdownRenderer(props: MarkdownRendererProps) {
 
     return (
         <div className="p-4">
-            {markdownTokens.map(a => {
-                return <span>{a.node.toString()}</span>;
+            {markdownTokens.map((a, index) => {
+                return <span key={index}>{a.node.toString()}</span>;
             })}
         </div>
     );

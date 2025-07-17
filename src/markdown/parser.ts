@@ -85,6 +85,12 @@ export function parseMarkdown(markdown: string): MarkdownToken[] {
                     tokens.push({node: new NewLine(), value: ''});
                 break;
             case '#':
+                // Link or link title can have '#' inside
+                if (node instanceof Link) {
+                    node.buffer += ch;
+                    break;
+                }
+
                 if (node.buffer.length > 0) {
                     node.buffer += ch;
                     break;

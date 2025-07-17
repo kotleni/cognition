@@ -72,6 +72,10 @@ export function parseMarkdown(markdown: string): MarkdownToken[] {
                 node = new Paragraph();
                 break;
             case '#':
+                if (node instanceof Link) {
+                    node.buffer += ch;
+                    break;
+                }
                 if (node.buffer.length > 0) {
                     node.buffer += ch;
                     break;

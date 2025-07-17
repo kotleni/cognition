@@ -12,6 +12,7 @@ import {
 } from '@/components/ui/menubar';
 import {FilesManager} from './files-manager';
 import {Separator} from '@/components/ui/separator';
+import {Save} from 'lucide-react';
 
 interface MarkdownExample {
     name: string;
@@ -65,7 +66,13 @@ export default function Home() {
                 <Separator orientation="vertical" />
                 <div className="flex flex-row grow-1">
                     <div className="flex flex-col gap-2 w-1/2 min-w-0">
-                        <div className="p-1">Editor</div>
+                        <div className="flex flex-row items-center justify-between gap-1 px-2 py-1">
+                            Editor
+                            <Save
+                                size={18}
+                                className="hover:text-slate-400 cursor-pointer"
+                            />
+                        </div>
                         <LeftSide
                             markdown={markdown}
                             onMDChange={setMarkdown}

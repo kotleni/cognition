@@ -10,7 +10,7 @@ import {
     MenubarMenu,
     MenubarTrigger,
 } from '@/components/ui/menubar';
-import { FilesManager } from './files-manager';
+import {FilesManager} from './files-manager';
 
 interface MarkdownExample {
     name: string;

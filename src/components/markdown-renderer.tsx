@@ -82,11 +82,10 @@ function compileMarkdownToReactComponents(
                 break;
 
             // TODO: Impl code hightlighting
-            // TODO: Impl reformatting code
             case 'code':
                 currentParagraphContent.push(
                     <div key={index} className="rounded-b-lg bg-slate-900">
-                        {(node as Code).buffer}
+                        <code>{(node as Code).buffer}</code>
                     </div>,
                 );
                 break;

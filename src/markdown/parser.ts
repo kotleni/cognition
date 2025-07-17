@@ -71,6 +71,7 @@ export function parseMarkdown(markdown: string): MarkdownToken[] {
 
     for (let i = 0; i < content.length; i++) {
         const ch = content[i];
+        const prevCh = content[i - 1];
 
         switch (ch) {
             case '\n':
@@ -79,7 +80,9 @@ export function parseMarkdown(markdown: string): MarkdownToken[] {
                 }
                 nodeStack = [new Paragraph()];
                 node = nodeStack[0];
-                tokens.push({node: new NewLine(), value: ''});
+
+                if (prevCh === '\n')
+                    tokens.push({node: new NewLine(), value: ''});
                 break;
             case '#':
                 if (node.buffer.length > 0) {

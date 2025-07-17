@@ -5,6 +5,7 @@ import {
     MarkdownToken,
     parseMarkdown,
     Title,
+    NewLine,
 } from '@/markdown/parser';
 import Link from 'next/link';
 import React, {useMemo, useState} from 'react';
@@ -37,10 +38,15 @@ function compileMarkdownToReactComponents(
 
         switch (node.tagName) {
             case 'title': {
-                const TitleComponent =
-                    `h${3 - (node as Title).size || 1}` as React.ElementType;
+                const size = (node as Title).size;
+                let style = 'text-2xl';
+                if (size === 2) style = 'text-xl';
+                else if (size === 1) style = 'text-lg';
+
                 nodes.push(
-                    <TitleComponent key={index}>{value}</TitleComponent>,
+                    <p className={style} key={index}>
+                        {value}
+                    </p>,
                 );
                 break;
             }
@@ -72,6 +78,7 @@ function compileMarkdownToReactComponents(
                 break;
             }
             case 'newline':
+                currentParagraphContent.push(<br />);
                 break;
 
             default:

@@ -4,7 +4,7 @@ export type MarkdownToken = {
     // attrs?: {[key: string]: string};
 };
 
-abstract class Node {
+export abstract class Node {
     abstract tagName: string;
     buffer: string = '';
 
@@ -13,11 +13,11 @@ abstract class Node {
     }
 }
 
-class Paragraph extends Node {
+export class Paragraph extends Node {
     tagName: string = 'paragraph';
 }
 
-class Title extends Node {
+export class Title extends Node {
     tagName: string = 'title';
     size: number = 3;
 
@@ -30,11 +30,11 @@ class Title extends Node {
     }
 }
 
-class NewLine extends Node {
+export class NewLine extends Node {
     tagName: string = 'newline';
 }
 
-class Link extends Node {
+export class Link extends Node {
     tagName: string = 'link';
     label: string = '';
     url: string = '';
@@ -54,11 +54,11 @@ class Link extends Node {
     }
 }
 
-class Bold extends Node {
+export class Bold extends Node {
     tagName: string = 'bold';
 }
 
-class Italic extends Node {
+export class Italic extends Node {
     tagName: string = 'italic';
 }
 

@@ -54,28 +54,34 @@ class Link extends Node {
     }
 }
 
+class Bold extends Node {
+    tagName: string = 'bold';
+}
+
+class Italic extends Node {
+    tagName: string = 'italic';
+}
+
 export function parseMarkdown(markdown: string): MarkdownToken[] {
     const content = markdown.trim() + '\n';
 
     const tokens: MarkdownToken[] = [];
     let node: Node = new Paragraph();
+    let nodeStack: Node[] = [node];
 
-    for (const ch of content) {
+    for (let i = 0; i < content.length; i++) {
+        const ch = content[i];
+
         switch (ch) {
             case '\n':
                 if (node.buffer.length > 0) {
                     tokens.push({node: node, value: node.buffer});
-                } else {
-                    node = new NewLine();
-                    tokens.push({node: node, value: node.buffer});
                 }
-                node = new Paragraph();
+                nodeStack = [new Paragraph()];
+                node = nodeStack[0];
+                tokens.push({node: new NewLine(), value: ''});
                 break;
             case '#':
-                if (node instanceof Link) {
-                    node.buffer += ch;
-                    break;
-                }
                 if (node.buffer.length > 0) {
                     node.buffer += ch;
                     break;
@@ -84,6 +90,7 @@ export function parseMarkdown(markdown: string): MarkdownToken[] {
                     node.decrementSize();
                 } else {
                     node = new Title();
+                    nodeStack = [node];
                 }
                 break;
             case '[':
@@ -111,10 +118,48 @@ export function parseMarkdown(markdown: string): MarkdownToken[] {
                     node.buffer += ch;
                 }
                 break;
+            case '*':
+                if (content[i + 1] === '*') {
+                    // Bold **
+                    i++;
+                    if (node instanceof Bold) {
+                        tokens.push({node: node, value: node.buffer});
+                        nodeStack.pop();
+                        node = nodeStack[nodeStack.length - 1];
+                    } else {
+                        if (node.buffer.length > 0) {
+                            tokens.push({node: node, value: node.buffer});
+                        }
+                        const boldNode = new Bold();
+                        nodeStack.push(boldNode);
+                        node = boldNode;
+                    }
+                } else {
+                    // Italic *
+                    if (node instanceof Italic) {
+                        tokens.push({node: node, value: node.buffer});
+                        nodeStack.pop();
+                        node = nodeStack[nodeStack.length - 1];
+                    } else {
+                        if (node.buffer.length > 0) {
+                            tokens.push({node: node, value: node.buffer});
+                        }
+                        const italicNode = new Italic();
+                        nodeStack.push(italicNode);
+                        node = italicNode;
+                    }
+                }
+                break;
             default:
                 node.buffer += ch;
                 break;
         }
+    }
+    if (
+        node.buffer.length > 0 &&
+        !(node instanceof Paragraph && node.buffer.trim() === '')
+    ) {
+        tokens.push({node: node, value: node.buffer});
     }
 
     return tokens;

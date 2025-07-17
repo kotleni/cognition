@@ -5,6 +5,7 @@ import {
     MarkdownToken,
     parseMarkdown,
     Title,
+    Code,
 } from '@/markdown/parser';
 import Link from 'next/link';
 import React, {useMemo, useState} from 'react';
@@ -78,6 +79,14 @@ function compileMarkdownToReactComponents(
             }
             case 'newline':
                 currentParagraphContent.push(<br key={index} />);
+                break;
+
+            case 'code':
+                currentParagraphContent.push(
+                    <div key={index} className="rounded-b-lg bg-slate-900">
+                        {(node as Code).buffer}
+                    </div>,
+                );
                 break;
 
             default:

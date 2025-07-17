@@ -1,7 +1,6 @@
 export type MarkdownToken = {
     node: Node;
     value: string;
-    // attrs?: {[key: string]: string};
 };
 
 export abstract class Node {
@@ -62,6 +61,19 @@ export class Italic extends Node {
     tagName: string = 'italic';
 }
 
+export class Code extends Node {
+    tagName: string = 'code';
+    language?: string;
+    isBlock: boolean = false;
+
+    toString(): string {
+        if (this.isBlock) {
+            return `[code-block:lang=${this.language || ''}:${this.buffer}]`;
+        }
+        return `[code-inline:${this.buffer}]`;
+    }
+}
+
 export function parseMarkdown(markdown: string): MarkdownToken[] {
     const content = markdown.trim() + '\n';
 
@@ -72,6 +84,18 @@ export function parseMarkdown(markdown: string): MarkdownToken[] {
     for (let i = 0; i < content.length; i++) {
         const ch = content[i];
         const prevCh = content[i - 1];
+
+        if (node instanceof Code && node.isBlock) {
+            if (content.substring(i, i + 3) === '```') {
+                tokens.push({node: node, value: node.buffer});
+                node = new Paragraph();
+                nodeStack = [node];
+                i += 2;
+            } else {
+                node.buffer += ch;
+            }
+            continue;
+        }
 
         switch (ch) {
             case '\n':
@@ -85,7 +109,6 @@ export function parseMarkdown(markdown: string): MarkdownToken[] {
                     tokens.push({node: new NewLine(), value: ''});
                 break;
             case '#':
-                // Link or link title can have '#' inside
                 if (node instanceof Link) {
                     node.buffer += ch;
                     break;
@@ -129,7 +152,6 @@ export function parseMarkdown(markdown: string): MarkdownToken[] {
                 break;
             case '*':
                 if (content[i + 1] === '*') {
-                    // Bold **
                     i++;
                     if (node instanceof Bold) {
                         tokens.push({node: node, value: node.buffer});
@@ -144,7 +166,6 @@ export function parseMarkdown(markdown: string): MarkdownToken[] {
                         node = boldNode;
                     }
                 } else {
-                    // Italic *
                     if (node instanceof Italic) {
                         tokens.push({node: node, value: node.buffer});
                         nodeStack.pop();
@@ -156,6 +177,38 @@ export function parseMarkdown(markdown: string): MarkdownToken[] {
                         const italicNode = new Italic();
                         nodeStack.push(italicNode);
                         node = italicNode;
+                    }
+                }
+                break;
+            case '`':
+                if (content.substring(i, i + 3) === '```') {
+                    if (node.buffer.length > 0) {
+                        tokens.push({node: node, value: node.buffer});
+                    }
+
+                    const endOfLine = content.indexOf('\n', i);
+                    const language = content.substring(i + 3, endOfLine).trim();
+
+                    const codeNode = new Code();
+                    codeNode.isBlock = true;
+                    if (language) {
+                        codeNode.language = language;
+                    }
+                    node = codeNode;
+                    nodeStack = [node];
+                    i = endOfLine;
+                } else {
+                    if (node instanceof Code && !node.isBlock) {
+                        tokens.push({node: node, value: node.buffer});
+                        nodeStack.pop();
+                        node = nodeStack[nodeStack.length - 1];
+                    } else {
+                        if (node.buffer.length > 0) {
+                            tokens.push({node: node, value: node.buffer});
+                        }
+                        const codeNode = new Code();
+                        nodeStack.push(codeNode);
+                        node = codeNode;
                     }
                 }
                 break;

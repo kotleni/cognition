@@ -77,7 +77,7 @@ function compileMarkdownToReactComponents(
                 break;
             }
             case 'newline':
-                currentParagraphContent.push(<br />);
+                currentParagraphContent.push(<br key={index} />);
                 break;
 
             default:

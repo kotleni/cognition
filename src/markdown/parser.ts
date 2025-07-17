@@ -34,6 +34,26 @@ class NewLine extends Node {
     tagName: string = 'newline';
 }
 
+class Link extends Node {
+    tagName: string = 'link';
+    label: string = '';
+    url: string = '';
+
+    saveLabel() {
+        this.label = this.buffer;
+        this.buffer = '';
+    }
+
+    saveUrl() {
+        this.url = this.buffer;
+        this.buffer = '';
+    }
+
+    toString(): string {
+        return `[link:${this.label}:${this.url}]`;
+    }
+}
+
 export function parseMarkdown(markdown: string): MarkdownToken[] {
     const content = markdown.trim() + '\n';
 
@@ -60,6 +80,31 @@ export function parseMarkdown(markdown: string): MarkdownToken[] {
                     node.decrementSize();
                 } else {
                     node = new Title();
+                }
+                break;
+            case '[':
+                if (node.buffer.length > 0) {
+                    tokens.push({node: node, value: node.buffer});
+                }
+                node = new Link();
+                break;
+            case ']':
+                if (node instanceof Link) {
+                    node.saveLabel();
+                }
+                break;
+            case '(':
+                if (!(node instanceof Link)) {
+                    node.buffer += ch;
+                }
+                break;
+            case ')':
+                if (node instanceof Link) {
+                    node.saveUrl();
+                    tokens.push({node: node, value: node.buffer});
+                    node = new Paragraph();
+                } else {
+                    node.buffer += ch;
                 }
                 break;
             default:

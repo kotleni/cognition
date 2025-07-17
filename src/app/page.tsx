@@ -18,6 +18,7 @@ interface MarkdownExample {
 
 const markdownExamples: MarkdownExample[] = [
     {name: 'Basic', url: '/examples/basic.md'},
+    {name: 'Code blocks', url: '/examples/code-blocks.md'},
 ];
 
 export default function Home() {

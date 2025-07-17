@@ -1,6 +1,5 @@
 # Example headings
-*italy*
-*bold text*
+*italy text* **bold text**
 
 ## Sample Section
 

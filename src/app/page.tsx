@@ -11,6 +11,7 @@ import {
     MenubarTrigger,
 } from '@/components/ui/menubar';
 import {FilesManager} from './files-manager';
+import {Separator} from '@/components/ui/separator';
 
 interface MarkdownExample {
     name: string;
@@ -61,7 +62,9 @@ export default function Home() {
             </Menubar>
             <div className="flex flex-row h-full">
                 <FilesManager />
+                <Separator orientation="vertical" />
                 <LeftSide markdown={markdown} onMDChange={setMarkdown} />
+                <Separator orientation="vertical" />
                 <RightSide markdown={markdown} />
             </div>
         </div>

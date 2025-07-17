@@ -15,6 +15,7 @@
   "dependencies": {
     "@radix-ui/react-label": "^2.1.7",
     "@radix-ui/react-menubar": "^1.1.15",
+    "@radix-ui/react-separator": "^1.1.7",
     "@radix-ui/react-switch": "^1.2.5",
     "@typescript-eslint/parser": "^8.36.0",
     "class-variance-authority": "^0.7.1",

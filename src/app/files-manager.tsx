@@ -24,7 +24,7 @@ function FileItem({markdownFile}: FileItemProps) {
 
 export function FilesManager() {
     return (
-        <div className="flex flex-col gap-4 p-2 bg-black/30 w-140">
+        <div className="flex flex-col gap-4 p-2 bg-black/30 md:min-w-60">
             <div className="flex flex-row gap-2 p-1">
                 <CirclePlus
                     size={18}

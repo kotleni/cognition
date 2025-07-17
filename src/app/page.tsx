@@ -63,9 +63,20 @@ export default function Home() {
             <div className="flex flex-row h-full">
                 <FilesManager />
                 <Separator orientation="vertical" />
-                <LeftSide markdown={markdown} onMDChange={setMarkdown} />
-                <Separator orientation="vertical" />
-                <RightSide markdown={markdown} />
+                <div className="flex flex-row grow-1">
+                    <div className="flex flex-col gap-2 w-1/2 min-w-0">
+                        <div className="p-1">Editor</div>
+                        <LeftSide
+                            markdown={markdown}
+                            onMDChange={setMarkdown}
+                        />
+                    </div>
+                    <Separator orientation="vertical" />
+                    <div className="flex flex-col gap-2 w-1/2 min-w-0">
+                        <div className="p-1">Preview</div>
+                        <RightSide markdown={markdown} />
+                    </div>
+                </div>
             </div>
         </div>
     );

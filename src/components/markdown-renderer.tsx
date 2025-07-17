@@ -7,7 +7,9 @@ import {
     Title,
 } from '@/markdown/parser';
 import Link from 'next/link';
-import React, {useMemo} from 'react';
+import React, {useMemo, useState} from 'react';
+import {Switch} from './ui/switch';
+import {Label} from './ui/label';
 
 interface MarkdownRendererProps {
     markdown: string;
@@ -88,6 +90,8 @@ function compileMarkdownToReactComponents(
 }
 
 export function MarkdownRenderer(props: MarkdownRendererProps) {
+    const [isRenderTokens, setIsRenderTokens] = useState(false);
+
     const markdownTokens = useMemo(
         () => parseMarkdown(props.markdown),
         [props.markdown],
@@ -98,5 +102,23 @@ export function MarkdownRenderer(props: MarkdownRendererProps) {
         [markdownTokens],
     );
 
-    return <div className="p-4 prose">{compiledNodes}</div>;
+    return (
+        <div className="p-4 prose">
+            <div className="flex items-center space-x-2">
+                <Switch
+                    id="debug-mode"
+                    checked={isRenderTokens}
+                    onCheckedChange={isChecked => {
+                        setIsRenderTokens(isChecked);
+                    }}
+                />
+                <Label htmlFor="debug-mode">Show markdown tokens</Label>
+            </div>
+            {isRenderTokens
+                ? markdownTokens.map((token, index) => {
+                      return <span key={index}>{token.node.toString()}</span>;
+                  })
+                : compiledNodes}
+        </div>
+    );
 }

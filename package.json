@@ -10,6 +10,7 @@
     "format": "eslint --fix '**/*.ts*'"
   },
   "dependencies": {
+    "@auth/core": "^0.40.0",
     "@radix-ui/react-slot": "^1.2.3",
     "@typescript-eslint/parser": "^8.36.0",
     "class-variance-authority": "^0.7.1",
